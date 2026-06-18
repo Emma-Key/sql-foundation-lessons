@@ -34,15 +34,40 @@ GROUP BY ps.Hospital
 	, ps.Ward
 ORDER BY TotalTariff DESC
 
+
+
+
 SELECT * from patientstay ps
 
 SELECT * from DimHospital
 
+SELECT * from DimHospitalBad
+
 SELECT 
 ps.PatientId
+,ps.Hospital
 ,h.HospitalType
 ,h.Hospital
+ FROM 
+ 	PatientStay ps 
+ LEFT JOIN 
+ 	DimHospitalBad h 
+  ON ps.Hospital = h.Hospital
 
- FROM PatientStay ps 
- JOIN DimHospital h 
- ON ps.Hospital = h.Hospital
+
+SELECT
+    ps.PatientId,
+    ps.Hospital,
+    ps.Ward,
+    ps.AdmittedDate,
+    ps.DischargeDate,
+    DATEADD(MONTH, 3, ps.DischargeDate) AS ApptDate
+	,ps.Tariff
+-- CREATE A COLUMN Budget 50% higher than the Tariff
+	,ps.Tariff * 1.5 AS Budget
+FROM
+    PatientStay AS ps
+WHERE
+    ps.Ward LIKE '%ophthalmology%';
+
+	
